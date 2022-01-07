@@ -20,7 +20,6 @@ export async function fetchAllCoins(limits: number) {
  */
 export async function fetchCoinInfo(coinId: string) {
   const { data } = await axios.get(`${BASE_URL}/coins/${coinId}`);
-  console.log('코인: ', data);
   return data;
 }
 
@@ -31,6 +30,15 @@ export async function fetchCoinInfo(coinId: string) {
  */
 export async function fetchCoinTicker(coinId: string) {
   const { data } = await axios.get(`${BASE_URL}/tickers/${coinId}`);
-  console.log('가격: ', data);
+  return data;
+}
+
+export async function fetchCoinHistory(coinId: string) {
+  // 2주일 간 데이터 가져오기
+  const endDate = Math.floor(Date.now() / 1000);
+  const startDate = endDate - 60 * 60 * 24 * 7 * 2;
+  const { data } = await axios.get(
+    `${BASE_URL}/coins/${coinId}/ohlcv/historical?start=${startDate}&end=${endDate}`
+  );
   return data;
 }

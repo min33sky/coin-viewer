@@ -29,11 +29,13 @@ const OverviewItem = styled.div`
 
 const Title = styled.h1`
   font-size: 48px;
+  font-weight: bold;
   align-items: center;
 `;
 
 const Description = styled.p`
   margin: 20px 0px;
+  line-height: 1.5;
 `;
 
 const Tabs = styled.div`
@@ -89,7 +91,7 @@ export default function Coin() {
         <>
           <Overview>
             <OverviewItem>
-              <span>Rank:</span>
+              <span>Rank</span>
               <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
@@ -97,7 +99,7 @@ export default function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
+              <span>Open Source</span>
               <span>{infoData?.open_source ? 'Yes' : 'No'}</span>
             </OverviewItem>
           </Overview>
@@ -106,11 +108,11 @@ export default function Coin() {
 
           <Overview>
             <OverviewItem>
-              <span>Total Supply:</span>
+              <span>Total Supply</span>
               <span>{tickerData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Max Supply:</span>
+              <span>Max Supply</span>
               <span>{tickerData?.max_supply}</span>
             </OverviewItem>
           </Overview>
@@ -131,7 +133,7 @@ export default function Coin() {
           </Routes> */}
 
           {/* 방식 2 */}
-          <Outlet />
+          <Outlet context={coinId} />
         </>
       )}
     </Container>
