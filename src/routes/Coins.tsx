@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -5,12 +6,18 @@ import { fetchAllCoins } from '../api/coin';
 
 export const Container = styled.div`
   padding: 0px 20px;
-  max-width: 480px;
+  max-width: 720px;
   margin: 0 auto;
+
+  @media (max-width: 480px) {
+    padding: 0 10px;
+    width: 100%;
+  }
 `;
 
 export const Header = styled.header`
   height: 15vh;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,8 +66,12 @@ export default function Coins() {
 
   return (
     <Container>
+      <Helmet>
+        <title>Coin Viewer</title>
+      </Helmet>
+
       <Header>
-        <Title>Coins</Title>
+        <Title>Coin Viewer</Title>
       </Header>
 
       {isLoading ? (

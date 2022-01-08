@@ -1,82 +1,54 @@
-import { useQuery } from 'react-query';
 import { useOutletContext } from 'react-router-dom';
-import { fetchCoinHistory } from '../api/coin';
-import ApexChart from 'react-apexcharts';
+import styled from 'styled-components';
+import { PriceData } from '../types/coin';
 
-interface ICoinHistory {
-  close: number;
-  high: number;
-  low: number;
-  market_cap: number;
-  open: number;
-  time_close: Date;
-  time_open: Date;
-  volume: number;
-}
+const Container = styled.div`
+  /*  */
+`;
+
+const PriceItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #273c75;
+  border-radius: 10px;
+
+  padding: 10px 20px;
+  margin-bottom: 10px;
+
+  p {
+    &:first-of-type {
+      font-weight: bold;
+    }
+  }
+`;
 
 function Price() {
-  const coinId = useOutletContext<string>();
-  const { isLoading, data } = useQuery<ICoinHistory[]>('coinHistory', () =>
-    fetchCoinHistory(coinId)
-  );
+  const [_, priceData] = useOutletContext<[string, PriceData]>();
 
   return (
-    <div>
-      {isLoading ? (
-        'Loading...'
-      ) : (
-        <ApexChart
-          type="line"
-          series={[
-            {
-              name: 'Price',
-              data: data?.map((price) => price.close),
-            },
-          ]}
-          options={{
-            theme: {
-              mode: 'dark',
-            },
-            chart: {
-              height: 300,
-              width: 500,
-              toolbar: {
-                show: true,
-              },
-              background: 'transparent',
-            },
-            grid: { show: false },
-            stroke: {
-              curve: 'smooth',
-              width: 3,
-            },
-            yaxis: {
-              show: false,
-            },
-            xaxis: {
-              axisBorder: { show: false },
-              axisTicks: { show: false },
-              labels: {
-                show: false,
-                format: 'dddd/MM',
-              },
-              type: 'category',
-              categories: data?.map((price) => new Date(price.time_close).toLocaleDateString()),
-            },
-            fill: {
-              type: 'gradient',
-              gradient: { gradientToColors: ['#0be881'], stops: [0, 100] },
-            },
-            colors: ['#0fbcf9'],
-            tooltip: {
-              y: {
-                formatter: (value) => `$${value.toFixed(2)}`,
-              },
-            },
-          }}
-        />
-      )}
-    </div>
+    <Container>
+      <PriceItem>
+        <p>시가 총액: </p>
+        <p>${priceData.quotes.USD.market_cap.toLocaleString()}</p>
+      </PriceItem>
+      <PriceItem>
+        <p>시가 총액 변동률 (24시간): </p>
+        <p>{priceData.quotes.USD.market_cap_change_24h}%</p>
+      </PriceItem>
+      <PriceItem>
+        <p>최고 가격 날짜:</p>
+        <p>{new Date(priceData.quotes.USD.ath_date).toLocaleDateString()}</p>
+      </PriceItem>
+      <PriceItem>
+        <p>최고 가격:</p>
+        <p>${priceData.quotes.USD.ath_price.toLocaleString()}</p>
+      </PriceItem>
+      <PriceItem>
+        <p>시세 변동률 (24시간): </p>
+        <p>{priceData.quotes.USD.volume_24h_change_24h}%</p>
+      </PriceItem>
+    </Container>
   );
 }
 
