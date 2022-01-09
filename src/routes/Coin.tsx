@@ -4,9 +4,10 @@ import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
 import { fetchCoinInfo, fetchCoinTicker } from '../api/coin';
 import { InfoData, PriceData, LocationProps } from '../types/coin';
-import { Container, Header } from './Coins';
+import { Container } from './Coins';
 import { FaArrowLeft } from 'react-icons/fa';
 import { formatPrice } from '../utils/formatter';
+import Header from '../components/Header';
 
 const Overview = styled.div`
   display: flex;
@@ -64,18 +65,6 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
-const BackLink = styled(Link)`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(0, -50%);
-  transition: all 0.25s ease-out;
-
-  &:hover {
-    color: tomato;
-  }
-`;
-
 export default function Coin() {
   const { coinId } = useParams<{ coinId: string }>();
   const { state } = useLocation() as LocationProps;
@@ -104,12 +93,8 @@ export default function Coin() {
         <title>{state?.name ? state.name : loading ? 'Loading' : infoData?.name}</title>
       </Helmet>
 
-      <Header>
-        <BackLink to="/">
-          <FaArrowLeft size={20} />
-        </BackLink>
-        <Title>{state?.name ? state.name : loading ? 'Loading' : infoData?.name}</Title>
-      </Header>
+      <Header title={state?.name ? state.name : loading ? 'Loading' : infoData?.name} />
+
       {loading ? (
         'Loading...'
       ) : (

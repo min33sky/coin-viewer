@@ -1,8 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { fetchAllCoins } from '../api/coin';
+import { isDarkAtom } from '../store/themeAtom';
+import { FaToggleOn, FaToggleOff } from 'react-icons/fa';
+import Header from '../components/Header';
 
 export const Container = styled.div`
   padding: 0px 20px;
@@ -15,26 +19,12 @@ export const Container = styled.div`
   }
 `;
 
-export const Header = styled.header`
-  height: 15vh;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const Title = styled.h1`
-  font-size: 48px;
-  font-weight: bold;
-  color: ${(props) => props.theme.accentColor};
-`;
-
 export const CoinList = styled.ul`
   /*  */
 `;
 
-export const CoinItem = styled.li`
-  background-color: white;
+export const CoinItem = styled.li<{ darkmode: boolean }>`
+  background-color: ${(props) => (props.darkmode ? 'whitesmoke' : '#192a56')};
   color: ${(props) => props.theme.bgColor};
   border-radius: 15px;
   margin-bottom: 10px;
@@ -63,6 +53,10 @@ export const Img = styled.img`
 
 export default function Coins() {
   const { isLoading, data } = useQuery(['allCoins', 100], () => fetchAllCoins(100));
+  const isDark = useRecoilValue(isDarkAtom);
+  const setDark = useSetRecoilState(isDarkAtom);
+
+  const changeMode = () => setDark((prev) => !prev);
 
   return (
     <Container>
@@ -70,16 +64,14 @@ export default function Coins() {
         <title>Coin Viewer</title>
       </Helmet>
 
-      <Header>
-        <Title>Coin Viewer</Title>
-      </Header>
+      <Header title="Coins" />
 
       {isLoading ? (
         'Loading....'
       ) : (
         <CoinList>
           {data?.map((coin) => (
-            <CoinItem key={coin.id}>
+            <CoinItem key={coin.id} darkmode={isDark}>
               <Link to={`/${coin.id}`} state={{ name: coin.name }}>
                 <Img
                   src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
