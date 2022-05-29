@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { fetchAllCoins } from '../api/coin';
 import { isDarkAtom } from '../store/themeAtom';
-import { FaToggleOn, FaToggleOff } from 'react-icons/fa';
 import Header from '../components/Header';
+import { QueryKeys } from '../queryClient';
 
 export const Container = styled.div`
   padding: 0px 20px;
@@ -52,11 +52,8 @@ export const Img = styled.img`
 `;
 
 export default function Coins() {
-  const { isLoading, data } = useQuery(['allCoins', 100], () => fetchAllCoins(100));
+  const { isLoading, data } = useQuery([QueryKeys.AlL_COINS, 100], () => fetchAllCoins(100));
   const isDark = useRecoilValue(isDarkAtom);
-  const setDark = useSetRecoilState(isDarkAtom);
-
-  const changeMode = () => setDark((prev) => !prev);
 
   return (
     <Container>

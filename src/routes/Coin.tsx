@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { fetchCoinInfo, fetchCoinTicker } from '../api/coin';
 import { InfoData, PriceData, LocationProps } from '../types/coin';
 import { Container } from './Coins';
-import { FaArrowLeft } from 'react-icons/fa';
 import { formatPrice } from '../utils/formatter';
 import Header from '../components/Header';
 
@@ -96,7 +95,9 @@ export default function Coin() {
       <Header title={state?.name ? state.name : loading ? 'Loading' : infoData?.name} />
 
       {loading ? (
-        'Loading...'
+        <>
+          <p>Loading...</p>
+        </>
       ) : (
         <>
           <Overview>

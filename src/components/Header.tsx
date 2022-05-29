@@ -15,7 +15,7 @@ export const Container = styled.header`
 export const Title = styled.h1`
   font-size: 48px;
   font-weight: bold;
-  color: ${(props) => props.theme.accentColor};
+  color: ${(props) => props.theme.headerColor};
 `;
 
 const BackLink = styled(Link)`

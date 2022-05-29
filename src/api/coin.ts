@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { fetcher } from '../queryClient';
 import { ICoin } from '../types/coin';
 
 const BASE_URL = `https://api.coinpaprika.com/v1`;
@@ -9,7 +10,11 @@ const BASE_URL = `https://api.coinpaprika.com/v1`;
  * @returns 코인 데이터를 담은 배열
  */
 export async function fetchAllCoins(limits: number) {
-  const { data } = await axios.get<ICoin[]>(`${BASE_URL}/coins`);
+  // const { data } = await axios.get<ICoin[]>(`${BASE_URL}/coins`);
+  let data = await fetcher<ICoin[]>({
+    method: 'GET',
+    path: '/coins',
+  });
   return data.slice(0, limits);
 }
 

@@ -3,16 +3,17 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { HelmetProvider } from 'react-helmet-async';
 import { RecoilRoot } from 'recoil';
+import { getClient } from './queryClient';
 
-const queryClient = new QueryClient();
+const client = getClient();
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={client}>
         <BrowserRouter>
           <HelmetProvider>
             <App />

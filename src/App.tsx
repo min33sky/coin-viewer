@@ -64,7 +64,7 @@ table {
 body {
   background-color: ${(props) => props.theme.bgColor};
   color: ${(props) => props.theme.textColor};
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 300;
   line-height: 1.2;
 }
