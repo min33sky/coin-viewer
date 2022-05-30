@@ -1,5 +1,10 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
+/**
+ * 타겟인 DOM을 감시하는 훅
+ * @param targetRef
+ * @returns
+ */
 export function useIntersection(targetRef: RefObject<HTMLDivElement>) {
   const observerRef = useRef<IntersectionObserver>();
   const [intersecting, setIntersecting] = useState(false);
