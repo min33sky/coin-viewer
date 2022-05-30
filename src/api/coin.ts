@@ -6,16 +6,20 @@ const BASE_URL = `https://api.coinpaprika.com/v1`;
 
 /**
  * 모든 코인 정보를 가져오는 함수
- * @param limits 불러올 코인 개수
+ * @param cursor 마지막으로 가져온 데이터의 ID
  * @returns 코인 데이터를 담은 배열
  */
-export async function fetchAllCoins(limits: number) {
+export async function fetchAllCoins({ cursor }: { cursor: string }) {
   // const { data } = await axios.get<ICoin[]>(`${BASE_URL}/coins`);
   let data = await fetcher<ICoin[]>({
     method: 'GET',
     path: '/coins',
   });
-  return data.slice(0, limits);
+
+  //* 인피니트 로딩을 위한 다음 데이터 위치 찾기
+  let fromIndex = data.findIndex((item) => item.id === cursor) + 1;
+
+  return data.slice(fromIndex, fromIndex + 15) || [];
 }
 
 /**

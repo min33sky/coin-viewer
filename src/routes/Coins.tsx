@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useQuery } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
@@ -7,6 +7,8 @@ import { fetchAllCoins } from '../api/coin';
 import { isDarkAtom } from '../store/themeAtom';
 import Header from '../components/Header';
 import { QueryKeys } from '../queryClient';
+import { useEffect, useRef } from 'react';
+import { useIntersection } from '../hooks/useIntersection';
 
 export const Container = styled.div`
   padding: 0px 20px;
@@ -52,8 +54,25 @@ export const Img = styled.img`
 `;
 
 export default function Coins() {
-  const { isLoading, data } = useQuery([QueryKeys.AlL_COINS, 100], () => fetchAllCoins(100));
+  const fetchMoreRef = useRef<HTMLDivElement>(null);
+  const intersecting = useIntersection(fetchMoreRef);
+
+  const { isLoading, data, fetchNextPage } = useInfiniteQuery(
+    [QueryKeys.AlL_COINS],
+    ({ pageParam = '' }) => fetchAllCoins({ cursor: pageParam }),
+    {
+      getNextPageParam: (lastpage, pages) => {
+        return lastpage.at(-1)?.id;
+      },
+    }
+  );
+
   const isDark = useRecoilValue(isDarkAtom);
+
+  useEffect(() => {
+    if (!intersecting) return;
+    fetchNextPage();
+  }, [fetchNextPage, intersecting]);
 
   return (
     <Container>
@@ -67,18 +86,24 @@ export default function Coins() {
         'Loading....'
       ) : (
         <CoinList>
-          {data?.map((coin) => (
-            <CoinItem key={coin.id} darkmode={isDark}>
-              <Link to={`/${coin.id}`} state={{ name: coin.name }}>
-                <Img
-                  src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
-                />
-                {coin.name} &rarr;
-              </Link>
-            </CoinItem>
-          ))}
+          {data?.pages.map((page) =>
+            page.map((coin) => (
+              <CoinItem key={coin.id} darkmode={isDark}>
+                <Link to={`/${coin.id}`} state={{ name: coin.name }}>
+                  <Img
+                    src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                  />
+                  {coin.name} &rarr;
+                </Link>
+              </CoinItem>
+            ))
+          )}
         </CoinList>
       )}
+
+      <div style={{ opacity: 0 }} ref={fetchMoreRef}>
+        More Fetch
+      </div>
     </Container>
   );
 }
