@@ -39,11 +39,25 @@ export const CoinItem = styled.li<{ darkmode: boolean }>`
   border-radius: 15px;
   margin-bottom: 10px;
   font-weight: 400;
+  height: 80px;
+  padding-left: 20px;
+  padding-right: 20px;
 
   a {
     display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
     align-items: center;
-    padding: 20px;
+
+    div {
+      display: flex;
+      align-items: center;
+    }
+
+    span {
+      font-weight: bold;
+    }
   }
 
   &:hover {
@@ -52,6 +66,15 @@ export const CoinItem = styled.li<{ darkmode: boolean }>`
     }
     transform: scale(105%);
     transition: all 0.25s ease-out;
+  }
+
+  @media screen and (min-width: 720px) {
+    display: flex;
+    height: 140px;
+  }
+
+  @media screen and (min-width: 980px) {
+    /* padding: 40px; */
   }
 `;
 
@@ -104,6 +127,7 @@ export default function Coins() {
     ({ pageParam = '' }) => fetchAllCoins({ cursor: pageParam, keyword: debouncedKeyword }),
     {
       getNextPageParam: (lastpage, pages) => {
+        //? 마지막 값을 기준으로 더 패치할지 결정한다.
         return lastpage.at(-1)?.id;
       },
       enabled: !!debouncedKeyword,
@@ -139,7 +163,7 @@ export default function Coins() {
           type="text"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          placeholder="Search Your Coin"
+          placeholder="Search Your Coin... 😂"
         />
         <FaSearch />
         {/* <button>검색</button> */}
@@ -155,10 +179,17 @@ export default function Coins() {
             page.map((coin) => (
               <CoinItem key={coin.id} darkmode={isDark}>
                 <Link to={`/${coin.id}`} state={{ name: coin.name }}>
-                  <Img
-                    src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
-                  />
-                  {coin.name} &rarr;
+                  <div>
+                    <Img
+                      src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                    />
+                    <p>
+                      {coin.name} [{coin.symbol}] &rarr;
+                    </p>
+                  </div>
+                  <p>
+                    <span>Rank. {coin.rank}</span>
+                  </p>
                 </Link>
               </CoinItem>
             ))
