@@ -2,11 +2,21 @@
 
 코인 정보와 가격을 보여준다
 
-## Modules
+## Getting Started
+
+```bash
+npm start
+```
+
+## Stacks
 
 - react
 - styled-components
 - react-router (v6)
+
+## TODO
+
+[] API 정책 변경으로 기간별 가격 보기 불가
 
 ## Coding Note
 
